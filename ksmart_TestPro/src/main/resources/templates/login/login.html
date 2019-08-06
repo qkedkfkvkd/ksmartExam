@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="~{layout/default}">
+	  <!-- layout/default.html 안에 있는 모든 내용을 사용하겠다. -->
+
+<th:block layout:fragment="customTitle">
+	<title>로그인</title>
+</th:block>
+<th:block layout:fragment="customContents">
+	<h5>로그인 화면</h5>
+	<form action="/loginMember" method="post">
+		<table border="1">
+			<tr>
+				<td>아이디</td>
+				<td><input type="text" name="memberId"></td>
+			</tr>
+			<tr>
+				<td>비밀번호</td>
+				<td><input type="password" name="memberPw"></td>
+			</tr>
+			<tr style="text-align: center;">
+				<td colspan="2">
+					<button type="submit">KSMART 로그인</button>
+				</td>
+			</tr>
+		</table>
+		<label th:if="${result ne null}" th:text="${result}"></label>
+		<!-- result가 객체일 경우 값 비교하기 (ne: != ) -->
+	</form>
+</th:block>
+</html>

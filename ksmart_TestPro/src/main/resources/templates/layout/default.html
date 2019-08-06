@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/head :: headFragment"></head>
+<!-- 이걸로 교체하겠다 fragments/head.html에서 headFragment 변수명안의 내용들을 가져오겠다. -->
+<body>
+	<div id="wrapper">
+		<div th:replace="fragments/header :: headerFragment"></div>
+		
+		<div th:replace="fragments/leftmenu :: leftmenuFragment"></div>
+		
+		<div id="rightcolumn" style="overflow: auto;">
+			<th:block layout:fragment="customContents"></th:block>
+		</div>
+		
+		<div th:replace="fragments/footer :: footerFragment"></div>
+	</div>
+</body>
+</html>

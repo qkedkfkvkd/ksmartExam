@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="~{layout/default}">
+	  <!-- layout/default.html 안에 있는 모든 내용을 사용하겠다. -->
+
+<th:block layout:fragment="customTitle">
+	<title>회원 전체 리스트</title>
+</th:block>
+<th:block layout:fragment="customContents">
+	<form action="/memberList" method="post">
+		<select name="memberSelect">
+			<option value="m_id">회원아이디</option>
+			<option value="m_name">회원명</option>
+		</select>
+		<input type="text" name="memberSelText">
+		<button type="submit">검색</button>
+	</form>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>아이디</th>
+				<th>비밀번호</th>
+				<th>권한</th>
+				<th>이름</th>
+				<th>이메일</th>
+				<th>수정</th>
+				<th>삭제</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="mem : ${memlist}">
+				<td>[[${mem.memberId}]]</td>
+				<td>[[${mem.memberPw}]]</td>
+				<td>[[${mem.memberLevel}]]</td>
+				<td>[[${mem.memberName}]]</td>
+				<td>[[${mem.memberEmail}]]</td>
+				<td>
+					<a th:href="@{/modifyMember(memberId=${mem.memberId})}">수정하기</a>
+				</td>
+				<td>
+					<a th:href="@{/delMember(memberId=${mem.memberId})}">삭제하기</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</th:block>
+</html>

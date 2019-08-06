@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ksmart.ksmart_TestPro.mapper.GoodsMapper">
+	<select id="goodsList" resultType="Map">
+		SELECT
+			m.m_id			AS memberId,
+			m.m_name		AS memberName,
+			
+			g.g_code		AS goodsCode,
+			g.g_name		AS goodsName,
+			g.g_cate		AS goodsCate,
+			g.g_price		AS goodsPrice,
+			g.g_color		AS goodsColor,
+			g.g_size		AS goodsSize,
+			g.g_date		AS goodsDate,
+			g.g_desc		AS goodsDesc
+		FROM
+			tb_member		AS m
+		INNER JOIN
+			tb_goods		AS g
+		ON
+			m.m_id = g.m_id
+	</select>
+	
+	<select id="getGoodsByCode" parameterType="String" resultType="kr.or.ksmart.ksmart_TestPro.vo.Goods">
+		SELECT
+			g_code		AS goodsCode
+		   ,m_id		AS memberId
+		   ,g_name		AS goodsName
+		   ,g_cate		AS goodsCate
+		   ,g_price		AS goodsPrice
+		   ,g_color		AS goodsColor
+		   ,g_size		AS goodsSize
+		   ,g_date		AS goodsDate
+		   ,g_desc		AS goodsDesc
+		FROM
+			tb_goods
+		WHERE
+			g_code = #{goodsCode}
+	</select>
+	
+	<select id="goodsSearchList" parameterType="kr.or.ksmart.ksmart_TestPro.vo.Goods" resultType="Map">
+		SELECT
+			m.m_id			AS memberId,
+			m.m_name		AS memberName,
+			
+			g.g_code		AS goodsCode,
+			g.g_name		AS goodsName,
+			g.g_cate		AS goodsCate,
+			g.g_price		AS goodsPrice,
+			g.g_color		AS goodsColor,
+			g.g_size		AS goodsSize,
+			g.g_date		AS goodsDate,
+			g.g_desc		AS goodsDesc
+		FROM
+			tb_member		AS m
+		INNER JOIN
+			tb_goods		AS g
+		ON
+			m.m_id = g.m_id
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+		<!--
+			"AND|OR" 에는 절대로 띄어쓰기가 있으면 안된다.
+			"AND |OR " 이런식으로 띄어쓰기가 있다면 에러 발생
+		-->
+			<if test="goodsSelect != null and goodsSelText neq ''.toString()">
+				AND
+					${goodsSelect}
+				LIKE
+					#{goodsSelText}
+			</if>
+			
+			<if test="firstMoney != ''">
+				AND
+					g.g_price
+				>=
+					CAST(${firstMoney} AS DECIMAL)
+			</if>
+			
+			<if test="lastMoney neq ''.toString">
+				AND
+					g.g_price
+				<![CDATA[<=]]>
+					CAST(${lastMoney} AS DECIMAL)
+			</if>
+		</trim>
+	</select>
+	
+	<select id="getGoodsMaxCode" resultType="Integer">
+		SELECT
+			MAX(CAST(substring(g_code,7) AS DECIMAL))
+		AS
+			maxcol
+		FROM
+			tb_goods
+	</select>
+	
+	<insert id="addGoods" parameterType="kr.or.ksmart.ksmart_TestPro.vo.Goods">
+		<selectKey keyProperty="goodsCode" resultType="String" order="BEFORE">
+			SELECT
+				CONCAT('goods_', MAX(CAST(substring(g_code,7) AS DECIMAL)+1))
+			AS maxcol
+			FROM
+				tb_goods
+		</selectKey>
+		INSERT INTO
+			tb_goods (
+				g_code,
+				m_id,
+				g_name,
+				g_cate,
+				g_price,
+				g_color,
+				g_size,
+				g_date,
+				g_desc	
+		) VALUES (
+			#{goodsCode},
+			#{memberId},
+			#{goodsName},
+			#{goodsCate},
+			#{goodsPrice},
+			#{goodsColor},
+			#{goodsSize},
+			curdate(),
+			#{goodsDesc}
+		)
+	</insert>
+	
+	<update id="modifyGoods" parameterType="kr.or.ksmart.ksmart_TestPro.vo.Goods">
+		UPDATE tb_goods
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="goodsName != null and goodsName neq ''.toString()">
+				g_name =	#{goodsName},
+			</if>
+			
+			<if test="goodsCate neq null and goodsCate != ''.toString()">
+				g_cate =	#{goodsCate},
+			</if>
+			
+			<if test="goodsPrice != null and goodsPrice != ''.toString()">
+				g_price =	#{goodsPrice},
+			</if>
+			
+			<if test="goodsColor != null and goodsColor neq ''.toString()">
+				g_color =	#{goodsColor},
+			</if>
+			
+			<if test="goodsSize neq null and goodsSize != ''.toString()">
+				g_size =	#{goodsSize},
+			</if>
+			
+				g_date =	curdate(),
+			
+			<if test="goodsDesc != null and goodsDesc != ''.toString()">
+				g_desc =	#{goodsDesc}
+			</if>
+		</trim>
+		WHERE g_code = #{goodsCode}
+	</update>
+	
+	<delete id="deleteGoods" parameterType="String">
+		DELETE FROM
+			tb_goods
+		WHERE
+			g_code =	#{goodsCode}
+	</delete>
+</mapper>

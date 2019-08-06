@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="~{layout/default}">
+	  <!-- layout/default.html 안에 있는 모든 내용을 사용하겠다. -->
+
+<th:block layout:fragment="customTitle">
+	<title>회원 전체 리스트</title>
+</th:block>
+<th:block layout:fragment="customContents">
+	<form action="/goodsSearch" method="post">
+		<select name="goodsSelect">						<!-- 여기의 값이 바로 테이블의 검색 컬럼명으로 들어가진다. -->
+			<option value="m.m_id">회원아이디</option>	<!-- 회원 테이블의 별명 m -->
+			<option value="m.m_name">회원명</option>	
+			<option value="g.g_name">상품명</option>	<!-- 상품 테이블의 별명 g -->
+			<option value="g.g_cate">상품카테고리</option>
+		</select>
+		<input type="text" name="goodsSelText"><br>
+		최소 가격 : <input type="text" name="firstMoney"><br>
+		최대 가격 : <input type="text" name="lastMoney">
+		<button type="submit">검색</button>
+	</form>
+	<table border="1">
+		<thead>
+			<tr>
+				<!-- 회원 테이블 -->
+				<th>아이디</th>
+				<th>이름</th>
+				<!-- 상품 테이블 -->
+				<th>상품코드</th>
+				<th>상품명</th>
+				<th>상품카테고리</th>
+				<th>상품가격</th>
+				<th>상품색상</th>
+				<th>상품크기</th>
+				<th>상품등록일</th>
+				<th>상품상세설명</th>
+				<th>수정</th>
+				<th>삭제</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="maplist : ${maplist}">
+				<!-- 회원 테이블 -->
+				<td th:text="${maplist.memberId}"></td>
+				<td th:text="${maplist.memberName}"></td>
+				<!-- 상품 테이블 -->
+				<td th:text="${maplist.goodsCode}"></td>
+				<td th:text="${maplist.goodsName}"></td>
+				<td th:text="${maplist.goodsCate}"></td>
+				<td th:text="${maplist.goodsPrice}"></td>
+				<td th:text="${maplist.goodsColor}"></td>
+				<td th:text="${maplist.goodsSize}"></td>
+				<td th:text="${maplist.goodsDate}"></td>
+				<td th:text="${maplist.goodsDesc}"></td>
+				<td>
+					<a th:href="@{/modifyGoods(goodsCode=${maplist.goodsCode})}">수정하기</a>
+				</td>
+				<td>
+					<a th:href="@{/deleteGoods(goodsCode=${maplist.goodsCode})}">
+						삭제하기
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</th:block>
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ksmart.ksmart_TestPro.mapper.MemberMapper">
+	<select id="memberList" resultType="kr.or.ksmart.ksmart_TestPro.vo.Member">
+	<!-- id="memberList" -->
+		SELECT
+			m_id		AS memberId,
+			m_pw		AS memberPw,
+			m_level		AS memberLevel,
+			m_name		AS memberName,
+			m_email		AS memberEmail
+		FROM tb_member
+	</select>
+	
+	<select id="memberSelectList" parameterType="kr.or.ksmart.ksmart_TestPro.vo.Member"
+			resultType="kr.or.ksmart.ksmart_TestPro.vo.Member">
+		SELECT
+			m_id		AS memberId,
+			m_pw		AS memberPw,
+			m_level		AS memberLevel,
+			m_name		AS memberName,
+			m_email		AS memberEmail
+		FROM tb_member
+		<if test="memberSelect neq null and memberSelText neq ''.toString()"> <!-- 추가된 조건문 -->
+			WHERE
+				${memberSelect}
+			LIKE
+				#{memberSelText}
+		</if>
+	</select>
+	
+	<select id="getMemberById" parameterType="String" resultType="kr.or.ksmart.ksmart_TestPro.vo.Member">
+		SELECT
+			m_id		AS memberId,
+			m_pw		AS memberPw,
+			m_level		AS memberLevel,
+			m_name		AS memberName,
+			m_email		AS memberEmail
+		FROM tb_member
+		WHERE
+			m_id = #{memberId}
+	</select>
+	
+	<select resultType="kr.or.ksmart.ksmart_TestPro.vo.Member" id="loginMember"
+			parameterType="kr.or.ksmart.ksmart_TestPro.vo.Member">
+		SELECT
+			m_id		AS memberId,
+			m_level		AS memberLevel,
+			m_name		AS memberName
+			FROM
+				tb_member
+			WHERE
+				m_id = #{memberId}
+			AND
+				m_pw = #{memberPw}
+	</select>
+	
+	<insert id="addMember" parameterType="kr.or.ksmart.ksmart_TestPro.vo.Member">
+		INSERT INTO
+			tb_member (
+			m_id,
+			m_pw,
+			m_level,
+			m_name,
+			m_email	
+		) VALUES (
+			#{memberId},
+			#{memberPw},
+			#{memberLevel},
+			#{memberName},
+			#{memberEmail}
+		)
+	</insert>
+	
+	<update id="modifyMember" parameterType="kr.or.ksmart.ksmart_TestPro.vo.Member">
+		UPDATE
+			tb_member
+		<trim prefix="SET" suffixOverrides=",">
+			<!-- 암호가 널이거나 공백일 경우  -->
+			<if test="memberPw neq null or memberPw != ''.toString()">
+				m_pw =		#{memberPw},
+			</if>
+			
+			<!-- 권한이 널이거나 공백일 경우 -->
+			<if test="memberLevel neq null or memberLevel != ''.toString()">
+				m_level =	#{memberLevel},
+			</if>
+			
+			<!-- 이름이 널이거나 공백일 경우 -->
+			<if test="memberName neq null or memberName != ''.toString()">
+				m_name =	#{memberName},
+			</if>
+			
+			<!-- 이메일이 널이거나 공백일 경우 -->
+			<if test="memberEmail neq null or memberEmail != ''.toString()">
+				m_email =	#{memberEmail}
+			</if>
+		</trim>
+		WHERE
+			m_id = #{memberId}
+	</update>
+	
+	<delete id="deleteMember" parameterType="kr.or.ksmart.ksmart_TestPro.vo.Member">
+		DELETE FROM
+			tb_member
+		WHERE
+			m_id = #{memberId}
+		AND
+			m_pw = #{memberPw}
+	</delete>
+	
+	
+</mapper>
