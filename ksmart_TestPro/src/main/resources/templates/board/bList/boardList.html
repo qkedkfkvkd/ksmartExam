@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="~{layout/default}">
+	  <!-- layout/default.html 안에 있는 모든 내용을 사용하겠다. -->
+
+<th:block layout:fragment="customTitle">
+	<title>게시판 글 리스트</title>
+</th:block>
+<th:block layout:fragment="customContents">
+	<h6>게시판 글 리스트</h6>
+	<form action="/boardList" method="post">
+		<select name="sk">
+			<option value="board_title">제목</option>
+			<option value="board_content">내용</option>
+			<option value="board_user">글쓴이</option>
+		</select>
+		<input type="text" name="sv">
+		<button type="submit">검색</button>
+	</form>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>글번호</th>
+				<th>제목</th>
+				<th>내용</th>
+				<th>글쓴이</th>
+				<th>등록일</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="l : ${boardList}">
+				<td th:text="${l.boardNo}"></td>
+				<td th:text="${l.boardTitle}"></td>
+				<td th:text="${#strings.abbreviate(l.boardContent, 10)}"></td>
+				<td th:text="${l.boardUser}"></td>
+				<td th:text="${l.boardDate}"></td>
+			</tr>
+			<tr>
+				<td colspan="5" align="center" th:each="num: ${#numbers.sequence(1,5)}">
+				
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</th:block>
+</html>

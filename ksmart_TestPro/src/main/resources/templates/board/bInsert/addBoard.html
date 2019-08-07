@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="~{layout/default}">
+	  <!-- layout/default.html 안에 있는 모든 내용을 사용하겠다. -->
+
+<th:block layout:fragment="customTitle">
+	<title>게시글 등록</title>
+</th:block>
+<th:block layout:fragment="customContents">
+	<h6>게시글 등록 화면</h6>
+	<form action="/addBoard" method="post">
+		<table border="1">
+			<tr>
+				<th>제목</th>
+				<td><input type="text" name="boardTitle"></td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td><textarea rows="19" cols="50" name="boardContent"></textarea></td>
+			</tr>
+			<tr>
+				<th>글쓴이</th>
+				<td>
+					<input type="text" th:value="${session.memName}" readonly="readonly">
+					<input type="hidden" name="boardUser"  th:value="${session.memId}">
+				</td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input type="password" name="boardPw"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<button type="submit">게시글등록</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</th:block>
+</html>

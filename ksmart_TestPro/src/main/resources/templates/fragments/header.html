@@ -11,11 +11,13 @@
 			03상품등록
 		</a>
 		<a href="/goodsList">04상품전체검색</a>
+		<a href="/boardList">04게시판</a>
 		<!-- 아이디 <%=S_ID%> <%=S_NAME%>님 <%=S_LEVEL%>권한 로그인 중 -->
 		<a th:if="${session.memId eq null}" th:href="@{/loginMember}" style="text-align: right;">로그인</a>
 		<th:block th:unless="${session.memId eq null}" >
+			<a href="/addBoard">05게시판등록</a><br/>
 			<label>
-				아이디:[[${session.memId}]] [[${session.memName}]]님 [[${session.memLevel}]]권한 로그인 중
+				[[${'아이디:' + session.memId + ' ' + session.memName + '님 ' + session.memLevel + ' 권한'}]]
 			</label>
 			<a th:href="@{/logoutMember}" style="text-align: right;">
 				로그아웃

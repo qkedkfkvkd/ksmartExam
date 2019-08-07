@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ksmart.ksmart_TestPro.mapper.BoardMapper">
+	<insert id="addBoard" parameterType="kr.or.ksmart.ksmart_TestPro.vo.Board">
+		INSERT INTO board (
+			 board_pw
+			,board_title
+			,board_content
+			,board_user
+			,board_date
+		) VALUES (
+			 #{boardPw}
+			,#{boardTitle}
+			,#{boardContent}
+			,#{boardUser}
+			,CURDATE()
+		)
+	</insert>
+	
+	<select id="boardList" parameterType="map" resultType="kr.or.ksmart.ksmart_TestPro.vo.Board">
+		SELECT
+			 board_no			AS boardNo
+			,board_title		AS boardTitle
+			,board_content		AS boardContent
+			,board_user			AS boardUser
+			,board_date			AS boardDate
+		FROM
+			board
+		<trim prefix="WHERE">
+			<if test="sv neq null and sv neq ''.toString()">
+				${sk} LIKE CONCAT(
+					'%', #{sv} ,'%'
+				)
+			</if>
+		</trim>
+		ORDER BY board_no DESC
+		LIMIT #{startRow}, #{RowPerPage}
+	</select>
+	
+	<select id="boardListCount" resultType="int">
+		SELECT COUNT(*) FROM board
+	</select>
+	
+	
+</mapper>
